@@ -5,9 +5,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class RawPhoto(
-    val id: Int,
-    var albumId: Int,
-    val title: String,
-    val url: String,
-    val thumbnailUrl: String
-) : Parcelable
+    var id: Int?,
+    var albumId: Int?,
+    var title: String?,
+    var url: String?,
+    var thumbnailUrl: String?
+) : Parcelable {
+    constructor() : this(null,null,null,null,null)
+}

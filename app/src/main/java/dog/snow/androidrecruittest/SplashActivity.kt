@@ -1,6 +1,7 @@
 package dog.snow.androidrecruittest
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.util.JsonReader
@@ -24,29 +25,28 @@ class SplashActivity : AppCompatActivity(R.layout.splash_activity) {
         progressbar.show()
 
         Handler().postDelayed({
-            // This method will be executed once the timer is over
-            // Start your app main activity
 
-            val reader = JsonReader(InputStreamReader(URL("https://jsonplaceholder.typicode.com/photos?_limit=4").openStream(), "UTF-8"))
-            reader.beginArray()
-            while(reader.hasNext()) {
-                reader.beginObject()
-                var raw = RawPhoto(reader.nextInt(),
-                    reader.nextInt(),
-                    reader.nextString(),
-                    reader.nextString(),
-                    reader.nextString())
-                reader.endObject()
-                Log.v("testy",raw.title)
-            }
+            mTask().execute()
 
-
-            progressbar.hide()
-            startActivity(Intent(this,MainActivity::class.java))
-
-            // close this activity
-            finish()
         }, SPLASH_TIME_OUT)
+    }
+
+    private inner class mTask : AsyncTask<Void?, Void?, Void?>() {
+        var mA = MainActivity()
+
+
+        override fun doInBackground(vararg arg0: Void?): Void? {
+            mA.parseXML()
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+            return null
+        }
+
+        protected fun onPostExecute(vararg params: Void?) {
+
+        }
+
+
     }
 
     fun parse(json: String): JSONObject? {
